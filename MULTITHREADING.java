@@ -182,7 +182,7 @@ class Manager extends Thread
 
 
  
-class Employee implements Runnable
+/*class Employee implements Runnable
 {
          @Override
          public void run()
@@ -213,7 +213,7 @@ class Manager implements Runnable
         System.out.println(Thread.activeCount()); 
       
     }
- }
+ }*/
 
  //2)implements Runnable
  //Completed...........
@@ -245,4 +245,106 @@ class Manager implements Runnable
 
 
 
-  
+
+ /*public class MULTITHREADING
+ {
+    public static void main(String[] args) 
+    {
+      Runnable r1 = new Runnable()
+      {         //anonymous class
+         public void run()
+         {
+            System.out.println("Hello "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId());
+         }
+      };
+
+      Runnable r2 = new Runnable()
+      {
+         public void run()
+         {
+            System.out.println("Hi "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId());
+         }
+      };
+
+      Thread t1 = new Thread(r1,"T1");
+      Thread t2 = new Thread(r2,"T2");
+      
+      t1.start();
+      t2.start();
+    }
+ }*/
+ /*
+    The Runnable interface is part of the Java standard library,
+    defined in the java.lang package. It contains a single method, run()
+  */
+// 3) Completed...........
+
+
+
+
+
+
+/* 
+public class MULTITHREADING
+{
+   public static void main(String[] args) 
+   {
+     Runnable r1 = () -> 
+     { 
+       for(int i=0;i<10;i++)
+       {
+         System.out.println("Hello "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId()); 
+       }
+     };
+
+
+     Runnable r2 = () -> 
+     { 
+       for(int i=0;i<10;i++)
+       {
+         System.out.println("Hi "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId()); 
+       }
+     };
+
+     Thread t1 = new Thread(r1,"T1");
+     Thread t2 = new Thread(r2,"T2");
+     
+     t1.start();
+     t2.start();
+   }
+}*/
+// 4) Completed...........
+
+
+
+
+public class MULTITHREADING
+{
+   public static void main(String[] args) throws Throwable
+   {
+     Runnable r1 = () -> 
+     { 
+       for(int i=0;i<10;i++)
+       {
+         System.out.println("Hello "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId()); 
+       }
+     };
+
+
+     Runnable r2 = () -> 
+     { 
+       for(int i=0;i<10;i++)
+       {
+         System.out.println("Hi "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId()); 
+       }
+     };
+
+     Thread t1 = new Thread(r1,"T1");
+     Thread t2 = new Thread(r2,"T2");
+     
+     t1.start();
+     //t1.join(); // By using this,t2 will start after t1 dies //like normal functions
+     //t1.sleep(10000);
+     t2.start();
+   }
+}
