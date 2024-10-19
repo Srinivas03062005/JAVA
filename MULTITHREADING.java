@@ -56,6 +56,13 @@ to be more efficient and responsive.
  */
 
 
+
+//MultiThreading : Multithreading is a programming technique that 
+//allows multiple threads to run concurrently within a single process
+
+
+
+
 /*
  public class MULTITHREADING
  {
@@ -317,7 +324,7 @@ public class MULTITHREADING
 
 
 
-
+/*
 public class MULTITHREADING
 {
    public static void main(String[] args) throws Throwable
@@ -347,4 +354,293 @@ public class MULTITHREADING
      //t1.sleep(10000);
      t2.start();
    }
-}
+}*/
+
+
+
+
+/*
+     THREAD LIFE CYCLE
+     0 - New
+     1 - Runnable
+     2 - Blocked
+     3 - Waiting(join)
+     4 - Timed Waiting(specific time/sleep)
+     5 - Terminated
+
+
+     Explanation For Blocked State : 
+     Imagine you and your friend want to play with a toy, but 
+     there’s only one toy and you both want to use it at the same time.
+
+     Here’s how it works:
+     You Start Playing: You grab the toy first and start
+     playing with it. This is like a thread that starts working.
+     Your Friend Waits: Your friend wants to play too, but they 
+     have to wait until you’re done because you’re still using 
+     the toy. This is like a thread that is in the Blocked state—it
+     can't do anything until you finish.
+
+     Finishing Up: After you finish playing, you give the toy
+     to your friend. Now they can play! This is when the thread
+     that was blocked can start working.
+*/
+
+/*public class MULTITHREADING
+{
+   public static void main(String[] args) 
+   {
+     Runnable r1 = () -> 
+     { 
+       for(int i=0;i<10;i++)
+       {
+         //System.out.println("Hello "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId()); 
+       }
+     };
+
+
+     Runnable r2 = () -> 
+     { 
+       for(int i=0;i<10;i++)
+       {
+         //System.out.println("Hi "+Thread.currentThread().getName()+"---"+Thread.currentThread().getId()); 
+       }
+     };
+
+     Thread t1 = new Thread(r1,"T1");
+     Thread t2 = new Thread(r2,"T2");
+     System.out.println(t1.getState());
+     
+     t1.start();
+     System.out.println(t1.getState());
+     t2.start();
+     System.out.println(t1.getState());
+   }
+}*/
+
+
+
+
+
+//Brick Business Example
+/* 
+ public class MULTITHREADING
+ {
+    public static void main(String[] args) throws Throwable
+    {
+      BrickDairy bd = new BrickDairy();
+      Runnable r1 = () -> 
+      { 
+        for(int i=0;i<10000;i+=50)
+        {
+             //Unloading The 50 Bricks
+             bd.incrementBrickCount();
+        }
+      };
+      Runnable r2 = () -> 
+      { 
+        for(int i=0;i<15000;i+=50)
+        {
+            //Unloading The 50 Bricks
+            bd.incrementBrickCount();
+        }
+      };
+      Runnable r3 = () -> 
+      { 
+        for(int i=0;i<5000;i+=50)
+        {
+            //Unloading The 50 Bricks
+            bd.incrementBrickCount();
+        }
+      };
+ 
+      Thread t1 = new Thread(r1);
+      Thread t2 = new Thread(r2);
+      Thread t3 = new Thread(r3);
+ 
+      t1.start();
+      t2.start();
+      t3.start();
+
+
+      t1.join();
+      t2.join();
+      t3.join();
+ 
+      System.out.println(bd.brickCount);
+    }
+ }
+ 
+ class BrickDairy 
+ {
+    int brickCount = 0;
+    public void incrementBrickCount()
+    {
+       brickCount += 50;
+    }
+ }
+    */
+
+ /*
+
+   RACE CONDITIONS : 
+   _________________
+
+
+   all three threads (t1, t2, and t3) are started almost simultaneously,
+   meaning they run concurrently.
+
+   When you call t1.start(), t2.start(), and t3.start(),
+   all three threads begin executing their tasks in parallel. This means 
+   that they can run at the same time
+
+   After starting the threads, you use t1.join(), t2.join(),
+   and t3.join(). The join() method makes the main thread (the one executing main()) 
+   wait for each specified thread to finish. So the main thread will wait for t1 to 
+   complete before moving on to wait for t2, and then wait for t3.
+
+
+   
+   While the join() calls ensure that the main thread waits for t1, t2, and
+   t3 to finish before proceeding, the actual output of bd.brickCount may 
+   not always be 30000 due to (potential race conditions) in the incrementBrickCount() method.
+
+   two or more threads might read and update the brickCount at the same time,
+   leading to lost updates. 
+   For example:
+   If t1 reads brickCount as 0 and t2 reads it as 0 almost simultaneously,
+   both might add 50 to 0, resulting in brickCount only being updated to 50 instead of 100.
+
+   As a result of these race conditions, the final value of brickCount can be less 
+   than 30000, even though the threads have all completed their execution.
+
+  */
+
+
+//Solution for the above Problem.......
+/*public class MULTITHREADING
+ {
+    public static void main(String[] args) throws Throwable
+    {
+      BrickDairy bd = new BrickDairy();
+      Runnable r1 = () -> 
+      { 
+        for(int i=0;i<10000;i+=50)
+        {
+             //Unloading The 50 Bricks
+             bd.incrementBrickCount();
+        }
+      };
+      Runnable r2 = () -> 
+      { 
+        for(int i=0;i<15000;i+=50)
+        {
+            //Unloading The 50 Bricks
+            bd.incrementBrickCount();
+        }
+      };
+      Runnable r3 = () -> 
+      { 
+        for(int i=0;i<5000;i+=50)
+        {
+            //Unloading The 50 Bricks
+            bd.incrementBrickCount();
+        }
+      };
+ 
+      Thread t1 = new Thread(r1);
+      Thread t2 = new Thread(r2);
+      Thread t3 = new Thread(r3);
+ 
+      t1.start();
+      t2.start();
+      t3.start();
+
+
+      t1.join();
+      t2.join();
+      t3.join();
+ 
+      System.out.println(bd.brickCount);
+    }
+ }
+ 
+ class BrickDairy 
+ {
+    int brickCount = 0;
+    public synchronized void incrementBrickCount()
+    {
+       brickCount += 50;
+    }
+ }*/
+/*
+  synchronized keyword indicates that the method can only be accessed 
+  by one thread at a time. If one thread is executing this method, other
+  threads trying to execute it will be blocked until the first thread finishes.
+ */
+
+ public class MULTITHREADING
+ {
+    public static void main(String[] args) throws Throwable
+    {
+      BrickDairy bd = new BrickDairy();
+      Runnable r1 = () -> 
+      { 
+        for(int i=0;i<10000;i+=50)
+        {
+             //Unloading The 50 Bricks
+             bd.incrementBrickCount();
+        }
+      };
+      Runnable r2 = () -> 
+      { 
+        for(int i=0;i<15000;i+=50)
+        {
+            //Unloading The 50 Bricks
+            bd.incrementBrickCount();
+        }
+      };
+      Runnable r3 = () -> 
+      { 
+        for(int i=0;i<5000;i+=50)
+        {
+            //Unloading The 50 Bricks
+            bd.incrementBrickCount();
+        }
+      };
+ 
+      Thread t1 = new Thread(r1);
+      Thread t2 = new Thread(r2);
+      Thread t3 = new Thread(r3);
+ 
+      t1.start();
+      t2.start();
+      t3.start();
+
+
+      t1.join();
+      t2.join();
+      t3.join();
+ 
+      System.out.println(bd.brickCount);
+      System.out.println(bd.brickCount2);
+    }
+ }
+ 
+ class BrickDairy 
+ {
+    int brickCount = 0;
+    int brickCount2 = 0;
+    void fun(int brickCount)
+    {
+      this.brickCount=brickCount;
+    }
+    public void incrementBrickCount()
+    {
+      synchronized(this)
+      {
+         brickCount += 50;
+      }
+       brickCount2 += 50;
+    }
+ }
