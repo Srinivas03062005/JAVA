@@ -584,6 +584,7 @@ public class MULTITHREADING
     public static void main(String[] args) throws Throwable
     {
       BrickDairy bd = new BrickDairy();
+
       Runnable r1 = () -> 
       { 
         for(int i=0;i<10000;i+=50)
@@ -644,3 +645,10 @@ public class MULTITHREADING
        brickCount2 += 50;
     }
  }
+
+ /*
+  When you use synchronized (this), it means that the current
+  object (the instance of the class) will be locked, ensuring
+  that only one thread can execute the synchronized block at 
+  a time for that particular object.
+  */
